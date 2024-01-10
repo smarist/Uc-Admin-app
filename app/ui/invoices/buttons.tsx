@@ -1,5 +1,12 @@
+'use client'
+import { deleteInvoice } from '@/app/lib/actions';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+
+interface DeleteInvoiceProps {
+  id: string;
+  name: string;
+}
 
 export function CreateInvoice() {
   return (
@@ -16,21 +23,30 @@ export function CreateInvoice() {
 export function UpdateInvoice({ id }: { id: string }) {
   return (
     <Link
-      href="/dashboard/invoices"
+      href={`/dashboard/invoices/${id}/edit`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />
     </Link>
   );
 }
+ 
+export function DeleteInvoice({ id, name }: DeleteInvoiceProps) {
+  const deleteInvoiceWithId = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const confirmed = window.confirm(`Are you sure you want to delete ${name}'s invoice?`);
+    if (confirmed) {
+      deleteInvoice(id);
+    }
+    console.log(name)
+  };
 
-export function DeleteInvoice({ id }: { id: string }) {
   return (
-    <>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
+    <form onSubmit={deleteInvoiceWithId}>
+      <button type="submit" className="rounded-md border p-2 hover:bg-gray-100">
         <span className="sr-only">Delete</span>
-        <TrashIcon className="w-5" />
+        <TrashIcon className="w-4" />
       </button>
-    </>
+    </form>
   );
 }
